@@ -1,0 +1,218 @@
+andre@t460:~/workspace/graalvm_comparison/Simple$ export JAVA_HOME=~/workspace/mandrel-java21-23.1.5.0-Final
+andre@t460:~/workspace/graalvm_comparison/Simple$ export GRAALVM_HOME="${JAVA_HOME}"
+andre@t460:~/workspace/graalvm_comparison/Simple$ export PATH="${JAVA_HOME}/bin:${PATH}"
+andre@t460:~/workspace/graalvm_comparison/Simple$ java --version
+openjdk 21.0.5 2024-10-15 LTS
+OpenJDK Runtime Environment Temurin-21.0.5+11 (build 21.0.5+11-LTS)
+OpenJDK 64-Bit Server VM Temurin-21.0.5+11 (build 21.0.5+11-LTS, mixed mode, sharing)
+andre@t460:~/workspace/graalvm_comparison/Simple$ native-image --version
+native-image 21.0.5 2024-10-15
+OpenJDK Runtime Environment Mandrel-23.1.5.0-Final (build 21.0.5+11-LTS)
+OpenJDK 64-Bit Server VM Mandrel-23.1.5.0-Final (build 21.0.5+11-LTS, mixed mode)
+andre@t460:~/workspace/graalvm_comparison/Simple$ 
+
+andre@t460:~/workspace/graalvm_comparison/Simple$ ./mvnw package
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< test.spring:Simple >-------------------------
+[INFO] Building Simple 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ Simple ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ Simple ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 2 source files with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ Simple ---
+[INFO] skip non existing resourceDirectory /home/andre/workspace/graalvm_comparison/Simple/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ Simple ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ Simple ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running test.spring.Simple.SimpleApplicationTests
+20:04:08.636 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [test.spring.Simple.SimpleApplicationTests]: SimpleApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:04:08.784 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration test.spring.Simple.SimpleApplication for test class test.spring.Simple.SimpleApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2024-10-26T20:04:09.314-05:00  INFO 210566 --- [Simple] [           main] t.spring.Simple.SimpleApplicationTests   : Starting SimpleApplicationTests using Java 21.0.5 with PID 210566 (started by andre in /home/andre/workspace/graalvm_comparison/Simple)
+2024-10-26T20:04:09.316-05:00  INFO 210566 --- [Simple] [           main] t.spring.Simple.SimpleApplicationTests   : No active profile set, falling back to 1 default profile: "default"
+2024-10-26T20:04:10.931-05:00  INFO 210566 --- [Simple] [           main] t.spring.Simple.SimpleApplicationTests   : Started SimpleApplicationTests in 1.989 seconds (process running for 3.175)
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/andre/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.19/byte-buddy-agent-1.14.19.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.502 s -- in test.spring.Simple.SimpleApplicationTests
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ Simple ---
+[INFO] Building jar: /home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.3.5:repackage (repackage) @ Simple ---
+[INFO] Replacing main artifact /home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.273 s
+[INFO] Finished at: 2024-10-26T20:04:12-05:00
+[INFO] ------------------------------------------------------------------------
+andre@t460:~/workspace/graalvm_comparison/Simple$ 
+
+andre@t460:~/workspace/graalvm_comparison/Simple$ java -jar target/Simple-0.0.1-SNAPSHOT.jar 
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2024-10-26T20:04:55.944-05:00  INFO 210889 --- [Simple] [           main] test.spring.Simple.SimpleApplication     : Starting SimpleApplication v0.0.1-SNAPSHOT using Java 21.0.5 with PID 210889 (/home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar started by andre in /home/andre/workspace/graalvm_comparison/Simple)
+2024-10-26T20:04:55.950-05:00  INFO 210889 --- [Simple] [           main] test.spring.Simple.SimpleApplication     : No active profile set, falling back to 1 default profile: "default"
+2024-10-26T20:04:57.467-05:00  INFO 210889 --- [Simple] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2024-10-26T20:04:57.494-05:00  INFO 210889 --- [Simple] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-10-26T20:04:57.494-05:00  INFO 210889 --- [Simple] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2024-10-26T20:04:57.559-05:00  INFO 210889 --- [Simple] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-10-26T20:04:57.561-05:00  INFO 210889 --- [Simple] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1505 ms
+2024-10-26T20:04:58.137-05:00  INFO 210889 --- [Simple] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2024-10-26T20:04:58.160-05:00  INFO 210889 --- [Simple] [           main] test.spring.Simple.SimpleApplication     : Started SimpleApplication in 2.859 seconds (process running for 3.597)
+
+
+andre@t460:~/workspace/graalvm_comparison/Simple$ ./mvnw native:compile -Pnative 
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< test.spring:Simple >-------------------------
+[INFO] Building Simple 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> native:0.10.3:compile (default-cli) > package @ Simple >>>
+[INFO] 
+[INFO] --- native:0.10.3:add-reachability-metadata (add-reachability-metadata) @ Simple ---
+[INFO] [graalvm reachability metadata repository for ch.qos.logback:logback-classic:1.5.11]: Configuration directory not found. Trying latest version.
+[INFO] [graalvm reachability metadata repository for ch.qos.logback:logback-classic:1.5.11]: Configuration directory is ch.qos.logback/logback-classic/1.4.9
+[INFO] [graalvm reachability metadata repository for com.fasterxml.jackson.core:jackson-databind:2.17.2]: Configuration directory not found. Trying latest version.
+[INFO] [graalvm reachability metadata repository for com.fasterxml.jackson.core:jackson-databind:2.17.2]: Configuration directory is com.fasterxml.jackson.core/jackson-databind/2.15.2
+[INFO] [graalvm reachability metadata repository for org.apache.tomcat.embed:tomcat-embed-core:10.1.31]: Configuration directory not found. Trying latest version.
+[INFO] [graalvm reachability metadata repository for org.apache.tomcat.embed:tomcat-embed-core:10.1.31]: Configuration directory is org.apache.tomcat.embed/tomcat-embed-core/10.0.20
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ Simple ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ Simple ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ Simple ---
+[INFO] skip non existing resourceDirectory /home/andre/workspace/graalvm_comparison/Simple/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ Simple ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ Simple ---
+[WARNING]  Parameter 'systemProperties' is deprecated: Use systemPropertyVariables instead.
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running test.spring.Simple.SimpleApplicationTests
+20:28:04.669 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [test.spring.Simple.SimpleApplicationTests]: SimpleApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:28:04.877 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration test.spring.Simple.SimpleApplication for test class test.spring.Simple.SimpleApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2024-10-26T20:28:05.417-05:00  INFO 219299 --- [Simple] [           main] t.spring.Simple.SimpleApplicationTests   : Starting SimpleApplicationTests using Java 21.0.5 with PID 219299 (started by andre in /home/andre/workspace/graalvm_comparison/Simple)
+2024-10-26T20:28:05.419-05:00  INFO 219299 --- [Simple] [           main] t.spring.Simple.SimpleApplicationTests   : No active profile set, falling back to 1 default profile: "default"
+2024-10-26T20:28:07.010-05:00  INFO 219299 --- [Simple] [           main] t.spring.Simple.SimpleApplicationTests   : Started SimpleApplicationTests in 1.972 seconds (process running for 3.3)
+WARNING: A Java agent has been loaded dynamically (/home/andre/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.19/byte-buddy-agent-1.14.19.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.598 s -- in test.spring.Simple.SimpleApplicationTests
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.3.5:process-aot (process-aot) @ Simple ---
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2024-10-26T20:28:09.478-05:00  INFO 219381 --- [Simple] [           main] test.spring.Simple.SimpleApplication     : Starting SimpleApplication using Java 21.0.5 with PID 219381 (/home/andre/workspace/graalvm_comparison/Simple/target/classes started by andre in /home/andre/workspace/graalvm_comparison/Simple)
+2024-10-26T20:28:09.485-05:00  INFO 219381 --- [Simple] [           main] test.spring.Simple.SimpleApplication     : No active profile set, falling back to 1 default profile: "default"
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ Simple ---
+[INFO] Building jar: /home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.3.5:repackage (repackage) @ Simple ---
+[INFO] Replacing main artifact /home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar.original
+[INFO] 
+[INFO] <<< native:0.10.3:compile (default-cli) < package @ Simple <<<
+[INFO] 
+[INFO] 
+[INFO] --- native:0.10.3:compile (default-cli) @ Simple ---
+[INFO] Found GraalVM installation from GRAALVM_HOME variable.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.626 s
+[INFO] Finished at: 2024-10-26T20:28:15-05:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.graalvm.buildtools:native-maven-plugin:0.10.3:compile (default-cli) on project Simple: Execution default-cli of goal org.graalvm.buildtools:native-maven-plugin:0.10.3:compile failed: Version to check 'native-image 21.0.5 2024-10-15
+[ERROR] OpenJDK Runtime Environment Mandrel-23.1.5.0-Final (build 21.0.5+11-LTS)
+[ERROR] OpenJDK 64-Bit Server VM Mandrel-23.1.5.0-Final (build 21.0.5+11-LTS, mixed mode)' can't be parsed.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginExecutionException
+andre@t460:~/workspace/graalvm_comparison/Simple$ 
+
+
