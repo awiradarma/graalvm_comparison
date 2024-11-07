@@ -1,0 +1,71 @@
+andre@cyber:~/workspace/graalvm_comparison/Simple$ ./mvnw liberty:run
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< test.spring:Simple >-------------------------
+[INFO] Building Simple 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- liberty:3.11.1:run (default-cli) @ Simple ---
+[INFO] Running maven-resources-plugin:resources
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] The encoding used to copy filtered properties files have not been set. This means that the same encoding will be used to copy filtered properties files as when copying other filtered resources. This might not be what you want! Run your build with --debug to see which files might be affected. Read more at https://maven.apache.org/plugins/maven-resources-plugin/examples/filtering-properties-files.html
+[INFO] Running maven-compiler-plugin:compile
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] Running liberty:create
+[INFO] CWWKM2102I: Using artifact based assembly archive : io.openliberty:openliberty-kernel:null:24.0.0.11:zip.
+[INFO] CWWKM2102I: Using installDirectory : /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp.
+[INFO] CWWKM2102I: Using serverName : defaultServer.
+[INFO] CWWKM2102I: Using serverDirectory : /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer.
+[INFO] CWWKM2112I: Re-using previously installed assembly.
+[INFO] Copying 1 file to /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer
+[INFO] CWWKM2144I: Update server configuration file server.xml from /home/andre/workspace/graalvm_comparison/Simple/src/main/liberty/config/server.xml.
+[INFO] CWWKM2185I: The liberty-maven-plugin configuration parameter "appsDirectory" value defaults to "dropins".
+[INFO] Running liberty:install-feature
+[INFO] Additional user feature json coordinate: org.glassfish.jersey.test-framework.providers:features:3.1.9
+[INFO] Feature signature verify option: enforce
+[WARNING] Unable to find the following additional features JSON in the connected repositories: org.glassfish.jersey.test-framework.providers:features:3.1.9. Please ignore this warning if this is not a user feature.
+[INFO] Parsing the server file for features and includes: defaultServer/configDropins/defaults/install_apps_configuration_1491924271.xml
+[INFO] Parsing the server file for features and includes: defaultServer/server.xml
+[INFO] plugin listed esa: []
+
+[INFO] Resolving features: [springboot-3.0, servlet-6.0]
+[INFO] The features are already installed, so no action is needed.
+[INFO] Running liberty:deploy
+[INFO] Copying 1 file to /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer
+[INFO] CWWKM2144I: Update server configuration file server.xml from /home/andre/workspace/graalvm_comparison/Simple/src/main/liberty/config/server.xml.
+[INFO] Found Spring Boot Uber JAR: /home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar
+[INFO] Application configuration is not found in server.xml : thin-Simple-0.0.1-SNAPSHOT.jar
+[INFO] Could not find application thin-Simple-0.0.1-SNAPSHOT.jar in server.xml locations.
+[INFO] CWWKM2001I: Invoke command is [/home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/bin/springBootUtility, thin, --sourceAppPath=/home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar, --targetLibCachePath=/home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/shared/resources/lib.index.cache, --targetThinAppPath=/home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer/apps/thin-Simple-0.0.1-SNAPSHOT.jar].
+[INFO] Creating a thin application from: /home/andre/workspace/graalvm_comparison/Simple/target/Simple-0.0.1-SNAPSHOT.jar
+[INFO] Library cache: /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/shared/resources/lib.index.cache
+[INFO] Thin application: /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer/apps/thin-Simple-0.0.1-SNAPSHOT.jar
+[WARNING] CWWKM2179W: The application is not defined in the server configuration but the POM configuration indicates it should be installed in the apps folder. Application configuration is being added to the target server configuration dropins folder by the plug-in.
+[INFO] Copying 1 file to /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer
+[INFO] CWWKM2144I: Update server configuration file server.xml from /home/andre/workspace/graalvm_comparison/Simple/src/main/liberty/config/server.xml.
+[INFO] CWWKM2001I: Invoke command is [/home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/bin/server, run, defaultServer].
+[INFO] 
+[INFO] Launching defaultServer (Open Liberty 24.0.0.11/wlp-1.0.95.cl241120241021-1102) on OpenJDK 64-Bit Server VM, version 21.0.5+11-LTS (en_US)
+[INFO] [AUDIT   ] CWWKE0001I: The server defaultServer has been launched.
+[INFO] [AUDIT   ] CWWKG0093A: Processing configuration drop-ins resource: /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer/configDropins/defaults/install_apps_configuration_1491924271.xml
+[INFO] [AUDIT   ] CWWKZ0058I: Monitoring dropins for applications.
+[INFO]   .   ____          _            __ _ _
+[INFO]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+[INFO] ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+[INFO]  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+[INFO]   '  |____| .__|_| |_|_| |_\__, | / / / /
+[INFO]  =========|_|==============|___/=/_/_/_/
+[INFO]  :: Spring Boot ::                (v3.3.5)
+[INFO] 2024-11-06T20:14:58.173-06:00  INFO 15345 --- [Simple] [ecutor-thread-4] test.spring.Simple.SimpleApplication     : Starting SimpleApplication using Java 21.0.5 with PID 15345 (/home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer/apps/thin-Simple-0.0.1-SNAPSHOT.jar started by andre in /home/andre/workspace/graalvm_comparison/Simple/target/liberty/wlp/usr/servers/defaultServer)
+[INFO] 2024-11-06T20:14:58.175-06:00  INFO 15345 --- [Simple] [ecutor-thread-4] test.spring.Simple.SimpleApplication     : No active profile set, falling back to 1 default profile: "default"
+[INFO] [AUDIT   ] CWWKT0016I: Web application available (default_host): http://192.168.32.103:9080/
+[INFO] 2024-11-06T20:14:58.606-06:00  INFO 15345 --- [Simple] [ecutor-thread-5] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 412 ms
+[INFO] 2024-11-06T20:14:58.733-06:00  INFO 15345 --- [Simple] [ecutor-thread-4] test.spring.Simple.SimpleApplication     : Started SimpleApplication in 0.719 seconds (process running for 1.295)
+[INFO] [AUDIT   ] CWWKZ0001I: Application Simple started in 0.892 seconds.
+[INFO] [AUDIT   ] CWWKF0012I: The server installed the following features: [servlet-6.0, springBoot-3.0].
+[INFO] [AUDIT   ] CWWKF0011I: The defaultServer server is ready to run a smarter planet. The defaultServer server started in 1.278 seconds.
+
+
+

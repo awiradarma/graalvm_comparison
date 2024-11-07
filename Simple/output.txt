@@ -1,0 +1,36 @@
+andre@cyber:~/workspace/graalvm_comparison/Simple$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+simple       latest    91a8a5b0b8db   3 minutes ago   486MB
+
+andre@cyber:~/workspace/graalvm_comparison/Simple$ docker run -d --name sb -p 9080:9080 -p 9443:9443 simple
+4cc0be5ff38d0caa3cee681f691fd029de9efd88df3909cee056296ae695f431
+
+andre@cyber:~/workspace/graalvm_comparison/Simple$ docker logs -f sb
+
+WARNING: Unknown module: jdk.management.agent specified to --add-exports
+WARNING: Unknown module: jdk.attach specified to --add-exports
+Launching defaultServer (Open Liberty 24.0.0.11/wlp-1.0.95.cl241120241021-1102) on Eclipse OpenJ9 VM, version 21.0.4+7-LTS (en_US)
+[AUDIT   ] CWWKE0001I: The server defaultServer has been launched.
+[AUDIT   ] CWWKG0093A: Processing configuration drop-ins resource: /opt/ol/wlp/usr/servers/defaultServer/configDropins/defaults/keystore.xml
+[AUDIT   ] CWWKG0093A: Processing configuration drop-ins resource: /opt/ol/wlp/usr/servers/defaultServer/configDropins/defaults/open-default-port.xml
+[AUDIT   ] CWWKZ0058I: Monitoring dropins for applications.
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.3.5)
+2024-11-07T01:54:21.213Z  INFO 1 --- [Simple] [ecutor-thread-6] test.spring.Simple.SimpleApplication     : Starting SimpleApplication using Java 21.0.4 with PID 1 (/opt/ol/wlp/usr/servers/defaultServer/dropins/spring/thin-Simple-0.0.1-SNAPSHOT.jar started by default in /opt/ol/wlp/output/defaultServer)
+2024-11-07T01:54:21.213Z  INFO 1 --- [Simple] [ecutor-thread-6] test.spring.Simple.SimpleApplication     : No active profile set, falling back to 1 default profile: "default"
+[AUDIT   ] CWWKT0016I: Web application available (default_host): http://4cc0be5ff38d:9080/
+2024-11-07T01:54:21.622Z  INFO 1 --- [Simple] [ecutor-thread-5] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 395 ms
+2024-11-07T01:54:21.754Z  INFO 1 --- [Simple] [ecutor-thread-6] test.spring.Simple.SimpleApplication     : Started SimpleApplication in 0.644 seconds (process running for 1.164)
+[AUDIT   ] CWWKZ0001I: Application thin-Simple-0.0.1-SNAPSHOT started in 0.773 seconds.
+[AUDIT   ] CWWKF0012I: The server installed the following features: [expressionLanguage-5.0, pages-3.1, servlet-6.0, springBoot-3.0, ssl-1.0, transportSecurity-1.0, websocket-2.1].
+[AUDIT   ] CWWKF0011I: The defaultServer server is ready to run a smarter planet. The defaultServer server started in 1.137 seconds.
+2024-11-07T01:54:43.661Z  INFO 1 --- [Simple] [cutor-thread-38] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-07T01:54:43.664Z  INFO 1 --- [Simple] [cutor-thread-38] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+
+
+
