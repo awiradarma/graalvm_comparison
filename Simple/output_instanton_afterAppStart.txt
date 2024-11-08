@@ -1,0 +1,233 @@
+andre@cyber:~/workspace/graalvm_comparison/Simple$ cat Dockerfile.instanton 
+# Stage and thin the application 
+FROM icr.io/appcafe/open-liberty:full-java21-openj9-ubi-minimal as staging
+
+COPY --chown=1001:0 target/Simple-0.0.1-SNAPSHOT.jar \
+                    /staging/Simple-0.0.1-SNAPSHOT.jar
+
+RUN springBootUtility thin \
+ --sourceAppPath=/staging/Simple-0.0.1-SNAPSHOT.jar \
+ --targetThinAppPath=/staging/thin-Simple-0.0.1-SNAPSHOT.jar \
+ --targetLibCachePath=/staging/lib.index.cache
+
+# Build the image
+FROM icr.io/appcafe/open-liberty:kernel-slim-java21-openj9-ubi-minimal
+
+ARG VERSION=1.0
+ARG REVISION=SNAPSHOT
+
+LABEL \
+  org.opencontainers.image.authors="Your Name" \
+  org.opencontainers.image.vendor="Open Liberty" \
+  org.opencontainers.image.url="local" \
+  org.opencontainers.image.source="" \
+  org.opencontainers.image.version="$VERSION" \
+  org.opencontainers.image.revision="$REVISION" \
+  vendor="Open Liberty" \
+  name="simple app" \
+  version="$VERSION-$REVISION" \
+  summary="A simple Spring Boot API" \
+  description="This image contains a Spring Boot application running with the Open Liberty runtime."
+
+RUN cp /opt/ol/wlp/templates/servers/springBoot3/server.xml /config/server.xml
+
+RUN features.sh
+
+COPY --chown=1001:0 --from=staging /staging/lib.index.cache /lib.index.cache
+COPY --chown=1001:0 --from=staging /staging/thin-Simple-0.0.1-SNAPSHOT.jar \
+                    /config/dropins/spring/thin-Simple-0.0.1-SNAPSHOT.jar
+
+RUN configure.sh 
+RUN checkpoint.sh afterAppStart
+andre@cyber:~/workspace/graalvm_comparison/Simple$ sudo podman build -t sb_after --cap-add=CHECKPOINT_RESTORE --cap-add=SYS_PTRACE --cap-add=SETPCAP --security-opt seccomp=unconfined -f Dockerfile.instanton 
+[1/2] STEP 1/3: FROM icr.io/appcafe/open-liberty:full-java21-openj9-ubi-minimal AS staging
+[1/2] STEP 2/3: COPY --chown=1001:0 target/Simple-0.0.1-SNAPSHOT.jar                     /staging/Simple-0.0.1-SNAPSHOT.jar
+--> f320c195dc8b
+[1/2] STEP 3/3: RUN springBootUtility thin  --sourceAppPath=/staging/Simple-0.0.1-SNAPSHOT.jar  --targetThinAppPath=/staging/thin-Simple-0.0.1-SNAPSHOT.jar  --targetLibCachePath=/staging/lib.index.cache
+Creating a thin application from: /staging/Simple-0.0.1-SNAPSHOT.jar
+Library cache: /staging/lib.index.cache
+Thin application: /staging/thin-Simple-0.0.1-SNAPSHOT.jar
+--> 2a7217a35da1
+[2/2] STEP 1/10: FROM icr.io/appcafe/open-liberty:kernel-slim-java21-openj9-ubi-minimal
+[2/2] STEP 2/10: ARG VERSION=1.0
+--> Using cache 42a848a3a333f2ad80fed51441c7d942f521775bd2ed8a9661ea72c3beee1199
+--> 42a848a3a333
+[2/2] STEP 3/10: ARG REVISION=SNAPSHOT
+--> Using cache 1df969d4394435226215865181067037003e33e50eed6813ccadf03cb26b34e1
+--> 1df969d43944
+[2/2] STEP 4/10: LABEL   org.opencontainers.image.authors="Your Name"   org.opencontainers.image.vendor="Open Liberty"   org.opencontainers.image.url="local"   org.opencontainers.image.source=""   org.opencontainers.image.version="$VERSION"   org.opencontainers.image.revision="$REVISION"   vendor="Open Liberty"   name="simple app"   version="$VERSION-$REVISION"   summary="A simple Spring Boot API"   description="This image contains a Spring Boot application running with the Open Liberty runtime."
+--> Using cache 67d99b8eec776735fcb2d5b4768636d20915d5b804c760180f0c70891f93abc6
+--> 67d99b8eec77
+[2/2] STEP 5/10: RUN cp /opt/ol/wlp/templates/servers/springBoot3/server.xml /config/server.xml
+--> Using cache 2583adcaa072a065400f3bdd9887cffe7537ad60a22968ed087fde785748bfbe
+--> 2583adcaa072
+[2/2] STEP 6/10: RUN features.sh
+--> Using cache 0a8a0ca73e704562eb843c305965e67abffb8ce597cf81db629eac43c3286cb5
+--> 0a8a0ca73e70
+[2/2] STEP 7/10: COPY --chown=1001:0 --from=staging /staging/lib.index.cache /lib.index.cache
+--> Using cache 79e4c395eb809f420eb8bfdb1355b1e6f115071d984f8e3f1a422baa90fad3ad
+--> 79e4c395eb80
+[2/2] STEP 8/10: COPY --chown=1001:0 --from=staging /staging/thin-Simple-0.0.1-SNAPSHOT.jar                     /config/dropins/spring/thin-Simple-0.0.1-SNAPSHOT.jar
+--> 0eb01e61779a
+[2/2] STEP 9/10: RUN configure.sh 
++ main
++ WLP_INSTALL_DIR=/opt/ol/wlp
++ SHARED_CONFIG_DIR=/opt/ol/wlp/usr/shared/config
++ SHARED_RESOURCE_DIR=/opt/ol/wlp/usr/shared/resources
++ SNIPPETS_SOURCE=/opt/ol/helpers/build/configuration_snippets
++ SNIPPETS_TARGET=/config/configDropins/overrides
++ SNIPPETS_TARGET_DEFAULTS=/config/configDropins/defaults
++ mkdir -p /config/configDropins/overrides
++ mkdir -p /config/configDropins/defaults
++ [[ -n '' ]]
++ '[' '' == client ']'
++ '[' '' == embedded ']'
++ keystorePath=/config/configDropins/defaults/keystore.xml
++ '[' '' '!=' false ']'
++ '[' '' '!=' false ']'
++ '[' '!' -e /config/configDropins/defaults/keystore.xml ']'
+++ openssl rand -base64 32
++ export KEYSTOREPWD=CZbAPQ+7uO+6Jy9gG8BbJca5if3JzIyR9XCQanjytOY=
++ KEYSTOREPWD=CZbAPQ+7uO+6Jy9gG8BbJca5if3JzIyR9XCQanjytOY=
++ sed 's|REPLACE|CZbAPQ+7uO+6Jy9gG8BbJca5if3JzIyR9XCQanjytOY=|g' /opt/ol/helpers/build/configuration_snippets/keystore.xml
++ chmod g+w /config/configDropins/defaults/keystore.xml
++ [[ -n '' ]]
++ find /opt/ol/fixes -type f -name '*.jar' -print0
++ sort -z
++ xargs -0 -n 1 -r -I '{}' java -jar '{}' --installLocation /opt/ol/wlp
+xargs: warning: options --max-args and --replace/-I/-i are mutually exclusive, ignoring previous --max-args value
++ touch /config/server.xml
++ '[' true == true ']'
++ cmd='populate_scc.sh -i 1'
++ '[' '' == false ']'
++ '[' '!' '' = '' ']'
++ '[' '' = false ']'
++ '[' '!' '' = '' ']'
++ '[' '' = false ']'
++ '[' '!' '' = '' ']'
++ eval populate_scc.sh -i 1
+++ populate_scc.sh -i 1
++ SCC_SIZE=80m
++ ITERATIONS=2
++ TRIM_SCC=yes
++ WARM_ENDPOINT=true
++ WARM_ENDPOINT_URL=localhost:9080/
++ WARM_OPENAPI_ENDPOINT=true
++ WARM_OPENAPI_ENDPOINT_URL=localhost:9080/openapi
++ [[ -d /opt/java/.scc ]]
+++ stat -L -c %a /opt/java/.scc
+++ cut -c 1,2
++ [[ 77 == \7\7 ]]
++ SCC=-Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc
++ export 'OPENJ9_JAVA_OPTIONS=-XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc'
++ OPENJ9_JAVA_OPTIONS='-XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc'
++ export 'IBM_JAVA_OPTIONS=-XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc'
++ IBM_JAVA_OPTIONS='-XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc'
++ CREATE_LAYER='-XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,createLayer,groupAccess'
++ DESTROY_LAYER='-XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,destroy'
++ PRINT_LAYER_STATS='-XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,printTopLayerStats'
++ getopts :i:s:u:o:tdhwcml OPT
++ case "$OPT" in
++ ITERATIONS=1
++ getopts :i:s:u:o:tdhwcml OPT
+++ umask
++ OLD_UMASK=0022
++ umask 002
++ java -XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,createLayer,groupAccess -Xscmx80m -version
+openjdk version "21.0.4" 2024-07-16 LTS
+IBM Semeru Runtime Open Edition 21.0.4.1 (build 21.0.4+7-LTS)
+Eclipse OpenJ9 VM 21.0.4.1 (build openj9-0.46.1, JRE 21 Linux amd64-64-Bit Compressed References 20240716_264 (JIT enabled, AOT enabled)
+OpenJ9   - 4760d5d320
+OMR      - 840a9adba
+JCL      - db3fffb417c based on jdk-21.0.4+7)
++ '[' yes == yes ']'
++ echo 'Calculating SCC layer upper bound, starting with initial size 80m.'
++ /opt/ol/wlp/bin/server start
++ '[' true == true ']'
++ curl --silent --output /dev/null --show-error --fail --max-time 5 localhost:9080/
++ echo 'localhost:9080/ call failed, continuing'
++ '[' true == true ']'
++ curl --silent --output /dev/null --show-error --fail --max-time 5 localhost:9080/openapi
++ echo 'localhost:9080/openapi call failed, continuing'
++ /opt/ol/wlp/bin/server stop
+++ awk '/^Cache is [0-9.]*% .*full/ {print substr($3, 1, length($3)-1)}'
++ FULL=47
++ echo 'SCC layer is 47% full. Destroying layer.'
++ java -XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,destroy
+JVMSHRC806I Compressed references persistent shared cache "openj9_system_scc" has been destroyed. Use option -Xnocompressedrefs if you want to destroy a non-compressed references cache.
++ true
++ SCC_SIZE=80
+++ awk 'BEGIN {print int(80 * 47 / 100.0 + 0.5)}'
++ SCC_SIZE=38
++ '[' 38 -eq 0 ']'
++ SCC_SIZE=38m
++ echo 'Re-creating layer with size 38m.'
++ java -XX:+OriginalJDK8HeapSizeCompatibilityMode -XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,createLayer,groupAccess -Xscmx38m -version
+openjdk version "21.0.4" 2024-07-16 LTS
+IBM Semeru Runtime Open Edition 21.0.4.1 (build 21.0.4+7-LTS)
+Eclipse OpenJ9 VM 21.0.4.1 (build openj9-0.46.1, JRE 21 Linux amd64-64-Bit Compressed References 20240716_264 (JIT enabled, AOT enabled)
+OpenJ9   - 4760d5d320
+OMR      - 840a9adba
+JCL      - db3fffb417c based on jdk-21.0.4+7)
++ (( i=0 ))
++ (( i<1 ))
++ /opt/ol/wlp/bin/server start
++ '[' true == true ']'
++ curl --silent --output /dev/null --show-error --fail --max-time 5 localhost:9080/
++ echo 'localhost:9080/ call failed, continuing'
++ '[' true == true ']'
++ curl --silent --output /dev/null --show-error --fail --max-time 5 localhost:9080/openapi
++ echo 'localhost:9080/openapi call failed, continuing'
++ /opt/ol/wlp/bin/server stop
++ (( i++ ))
++ (( i<1 ))
++ umask 0022
++ rm -rf /output/messaging /logs/console.log /logs/messages_24.11.08_02.23.27.0.log /logs/messages.log /logs/verbosegc.001.log /logs/verbosegc.002.log /logs/verbosegc.003.log /opt/ol/wlp/output/.classCache
++ chmod -R g+rwx /output/workarea
++ [[ -d /output/resources ]]
++ chmod -R g+rwx /output/resources
+++ awk '/^Cache is [0-9.]*% .*full/ {print substr($3, 1, length($3)-1)}'
++ FULL=75
++ echo 'SCC layer is 75% full.'
+--> aff4fe9ade50
+[2/2] STEP 10/10: RUN checkpoint.sh afterAppStart
+Performing checkpoint --at=afterAppStart
+
+WARNING: Unknown module: jdk.management.agent specified to --add-exports
+WARNING: Unknown module: jdk.attach specified to --add-exports
+Launching defaultServer (Open Liberty 24.0.0.11/wlp-1.0.95.cl241120241021-1102) on Eclipse OpenJ9 VM, version 21.0.4+7-LTS (en_US)
+[AUDIT   ] CWWKE0001I: The server defaultServer has been launched.
+[AUDIT   ] CWWKG0093A: Processing configuration drop-ins resource: /opt/ol/wlp/usr/servers/defaultServer/configDropins/defaults/keystore.xml
+[AUDIT   ] CWWKG0093A: Processing configuration drop-ins resource: /opt/ol/wlp/usr/servers/defaultServer/configDropins/defaults/open-default-port.xml
+[AUDIT   ] CWWKZ0058I: Monitoring dropins for applications.
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.3.5)
+2024-11-08T02:23:36.752Z  INFO 1026 --- [Simple] [ecutor-thread-4] test.spring.Simple.SimpleApplication     : Starting SimpleApplication using Java 21.0.4 with PID 1026 (/opt/ol/wlp/usr/servers/defaultServer/dropins/spring/thin-Simple-0.0.1-SNAPSHOT.jar started by unknown in /opt/ol/wlp/output/defaultServer)
+2024-11-08T02:23:36.752Z  INFO 1026 --- [Simple] [ecutor-thread-4] test.spring.Simple.SimpleApplication     : No active profile set, falling back to 1 default profile: "default"
+[2/2] COMMIT sb_after
+--> b98acdeb8861
+Successfully tagged localhost/sb_after:latest
+b98acdeb88614a3270cfc07171d63be8c38b2cbd8a60e09e6bb8b3237a9748c6
+andre@cyber:~/workspace/graalvm_comparison/Simple$ 
+andre@cyber:~/workspace/graalvm_comparison/Simple$ sudo podman run   --rm   --cap-add=CHECKPOINT_RESTORE   --cap-add=SETPCAP   --security-opt seccomp=unconfined   -p 9080:9080 sb_after
+
+[AUDIT   ] Launching defaultServer (Open Liberty 24.0.0.11/wlp-1.0.95.cl241120241021-1102) on Eclipse OpenJ9 VM, version 21.0.4+7-LTS (en_US)
+[AUDIT   ] CWWKT0016I: Web application available (default_host): http://ec1bc1274944:9080/
+[AUDIT   ] CWWKC0452I: The Liberty server process resumed operation from a checkpoint in 0.123 seconds.
+[AUDIT   ] CWWKZ0001I: Application thin-Simple-0.0.1-SNAPSHOT started in 0.125 seconds.
+[AUDIT   ] CWWKF0012I: The server installed the following features: [expressionLanguage-5.0, pages-3.1, servlet-6.0, springBoot-3.0, ssl-1.0, transportSecurity-1.0, websocket-2.1].
+[AUDIT   ] CWWKF0011I: The defaultServer server is ready to run a smarter planet. The defaultServer server started in 0.127 seconds.
+2024-11-08T02:24:12.119Z  INFO 1026 --- [Simple] [ecutor-thread-5] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-08T02:24:12.119Z  INFO 1026 --- [Simple] [ecutor-thread-5] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+^C[AUDIT   ] CWWKE0085I: The server defaultServer is stopping because the JVM is exiting.
+[AUDIT   ] CWWKT0017I: Web application removed (default_host): http://ec1bc1274944:9080/
+[AUDIT   ] CWWKE1100I: Waiting for up to 30 seconds for the server to quiesce.
+[AUDIT   ] CWWKZ0009I: The application thin-Simple-0.0.1-SNAPSHOT has stopped successfully.
+andre@cyber:~/workspace/graalvm_comparison/Simple$ 
+
+
